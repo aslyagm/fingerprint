@@ -1,0 +1,29 @@
+# Datasets (FVC license: no redistribution) — see README for download
+Db1_a/
+Db1_b/
+Db*_a/
+Db*_b/
+data/raw/
+*.tif
+
+# Course material
+Biometrics_Project_*.pdf
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Model weights (provide a download link instead)
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

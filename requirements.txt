@@ -1,0 +1,7 @@
+# Python 3.13
+numpy==2.5.4
+opencv-python==5.0.0.93
+scikit-image==0.26.0
+scipy==1.18.1
+pandas==3.1.1
+matplotlib==3.11.2

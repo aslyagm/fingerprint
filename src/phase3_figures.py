@@ -156,6 +156,31 @@ for ax in axes.ravel():
     ax.axis("off")
 save(fig, "fig6_rejected_examples.png")
 
+# ------------------------------------------------- 7. hardest cases: did preprocessing fail?
+hard = [
+    ("En küçük alan", df.sort_values("fg_ratio").iloc[0]),
+    ("En düşük tutarlılık", df.sort_values("coherence").iloc[0]),
+    ("En az minutiae", df.sort_values("n_minutiae").iloc[0]),
+    ("En büyük kayma", df.sort_values("displacement").iloc[-1]),
+]
+fig, axes = plt.subplots(1, len(hard), figsize=(4.2 * len(hard), 4.6))
+for ax, (name, row) in zip(axes, hard):
+    rr = process(load(path(row.file)))
+    show_minutiae(ax, rr["img"], rr["minutiae"])
+    ax.contour(rr["mask"], levels=[0.5], colors="#ff7f0e", linewidths=2)
+    ax.set_title(f"{name}\n{row.file.split('/')[-1]} · {len(rr['minutiae'])} minutiae", fontsize=11)
+    ax.axis("off")
+save(fig, "fig7_hardest_cases.png")
+
+failures = {
+    "empty_mask": int((df.fg_ratio == 0).sum()),
+    "frequency_fallback": int((df.freq_blocks == 0).sum()),
+    "zero_minutiae": int((df.n_minutiae == 0).sum()),
+    "min_fg_ratio": round(float(df.fg_ratio.min()), 3),
+    "min_freq_blocks": int(df.freq_blocks.min()),
+    "min_minutiae": int(df.n_minutiae.min()),
+}
+
 # ------------------------------------------------- summary
 summary = {
     "images": {s: int((df.subset == s).sum()) for s in ["Db1_a", "Db1_b"]},
@@ -163,6 +188,7 @@ summary = {
     "image_size_raw": [int(df.width.iloc[0]), int(df.height.iloc[0])],
     "right_edge_artifact_images": int((df.artifact_cols > 0).sum()),
     "fvc_comparisons_db1a": {"genuine": 100 * 28, "impostor": 100 * 99 // 2},
+    "preprocessing_failures": failures,
     "rejected_total": {s: int(df[(df.subset == s)].rejected.sum()) for s in ["Db1_a", "Db1_b"]},
     "rejected_by_rule": {k: int(m.sum()) for k, m in RULES.items()},
     "rejected_by_impression": df[df.rejected].impression.value_counts().sort_index().to_dict(),

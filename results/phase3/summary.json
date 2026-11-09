@@ -16,6 +16,14 @@
     "genuine": 2800,
     "impostor": 4950
   },
+  "preprocessing_failures": {
+    "empty_mask": 0,
+    "frequency_fallback": 0,
+    "zero_minutiae": 0,
+    "min_fg_ratio": 0.19,
+    "min_freq_blocks": 77,
+    "min_minutiae": 6
+  },
   "rejected_total": {
     "Db1_a": 41,
     "Db1_b": 7

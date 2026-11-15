@@ -27,3 +27,8 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+
+# Presentations (shared via claude.ai / submitted separately)
+Faz*.pptx
+Faz*.pdf
+*.pptx

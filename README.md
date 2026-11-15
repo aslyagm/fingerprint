@@ -33,6 +33,16 @@ python src/phase3_stats.py      # results/phase3/quality.csv
 python src/phase3_figures.py    # şekiller, quality_flagged.csv, summary.json
 ```
 
+Minutiae dalı (SourceAFIS 3.18.1, Java 17+ gerekir):
+
+```bash
+bash tools/get_sourceafis.sh                                   # jar'ları tools/lib/ altına indirir
+javac -encoding UTF-8 -cp "tools/lib/*" -d build src/minutiae/FvcScores.java
+java -cp "build;tools/lib/*" FvcScores Db1_a results/minutiae/scores_sourceafis_Db1_a.csv   # Linux/macOS: ':'
+java -cp "build;tools/lib/*" FvcScores Db1_b results/minutiae/scores_sourceafis_Db1_b.csv
+python src/evaluate.py results/minutiae/scores_sourceafis_Db1_a.csv --name SourceAFIS     --tune results/minutiae/scores_sourceafis_Db1_b.csv --out results/minutiae
+```
+
 ## Yapı
 
 | Yol | İçerik |
@@ -40,6 +50,10 @@ python src/phase3_figures.py    # şekiller, quality_flagged.csv, summary.json
 | `src/preprocess.py` | Segmentasyon, yön alanı, Gabor iyileştirme, inceltme, minutiae çıkarımı |
 | `src/phase3_stats.py` | Görüntü başına kalite ölçüleri |
 | `src/phase3_figures.py` | Faz 3 şekilleri, red kuralları ve özet |
+| `src/minutiae/FvcScores.java` | FVC protokolüyle SourceAFIS genuine/impostor skorları |
+| `src/evaluate.py` | EER, FNMR@FMR, parmak bazlı bootstrap GA, DET eğrisi (her iki dal için) |
+| `tools/get_sourceafis.sh` | SourceAFIS ve bağımlılıklarını SHA-1 doğrulamalı indirir |
+| `results/minutiae/` | Skor CSV'leri, `metrics_sourceafis.json`, DET şekli |
 | `results/phase3/` | Şekiller, CSV'ler, `summary.json`, slayt notları |
 
 ## Değerlendirme protokolü

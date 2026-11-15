@@ -36,3 +36,10 @@ Faz*.pdf
 # Java build / downloaded jars (tools/get_sourceafis.sh)
 build/
 tools/lib/
+
+# Parmak izi görüntüsü içeren şekiller (FVC lisansı) — betiklerle yerelde üretilir
+results/phase3/fig1_dataset_overview.png
+results/phase3/fig2_pipeline.png
+results/phase3/fig5_quality_issues.png
+results/phase3/fig6_rejected_examples.png
+results/phase3/fig7_hardest_cases.png

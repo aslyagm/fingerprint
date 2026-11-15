@@ -43,6 +43,9 @@ java -cp "build;tools/lib/*" FvcScores Db1_b results/minutiae/scores_sourceafis_
 python src/evaluate.py results/minutiae/scores_sourceafis_Db1_a.csv --name SourceAFIS     --tune results/minutiae/scores_sourceafis_Db1_b.csv --out results/minutiae
 ```
 
+Parmak izi görüntüsü içeren şekiller (fig1, fig2, fig5–fig7) FVC lisansı gereği repoda
+bulunmaz; `phase3_figures.py` veriyle birlikte çalıştırıldığında yerelde üretilir.
+
 ## Yapı
 
 | Yol | İçerik |
@@ -54,7 +57,7 @@ python src/evaluate.py results/minutiae/scores_sourceafis_Db1_a.csv --name Sourc
 | `src/evaluate.py` | EER, FNMR@FMR, parmak bazlı bootstrap GA, DET eğrisi (her iki dal için) |
 | `tools/get_sourceafis.sh` | SourceAFIS ve bağımlılıklarını SHA-1 doğrulamalı indirir |
 | `results/minutiae/` | Skor CSV'leri, `metrics_sourceafis.json`, DET şekli |
-| `results/phase3/` | Şekiller, CSV'ler, `summary.json`, slayt notları |
+| `results/phase3/` | Grafikler, CSV'ler, `summary.json`, slayt notları |
 
 ## Değerlendirme protokolü
 

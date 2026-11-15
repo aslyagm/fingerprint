@@ -61,8 +61,3 @@ python src/evaluate.py results/minutiae/scores_sourceafis_Db1_a.csv --name Sourc
 - Test: yalnızca DB1-A, FVC protokolü — 2800 genuine (100 × C(8,2)), 4950 impostor (C(100,2)).
 - CNN ince ayarı ve eşik seçimi test parmaklarından ayrık verilerle yapılır.
 - Kalite kurallarıyla işaretlenen görüntüler testten atılmaz; yalnızca hata analizinde kullanılır.
-
-## Yapay zekâ kullanımı
-
-Kod ve şekillerin hazırlanmasında Claude (Anthropic) kullanılmıştır; ayrıntılar raporlardaki
-Yapay Zekâ Kullanım Beyanı'ndadır.

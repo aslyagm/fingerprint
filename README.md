@@ -43,6 +43,16 @@ java -cp "build;tools/lib/*" FvcScores Db1_b results/minutiae/scores_sourceafis_
 python src/evaluate.py results/minutiae/scores_sourceafis_Db1_a.csv --name SourceAFIS     --tune results/minutiae/scores_sourceafis_Db1_b.csv --out results/minutiae
 ```
 
+Derin dal (ResNet-18; CPU yeterli, PyTorch CPU sürümü için
+`pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu`):
+
+```bash
+python src/deep/embed_scores.py Db1_a --input gabor     # raw | gabor; --weights ile ince ayarlı model
+python src/deep/embed_scores.py Db1_b --input gabor
+python src/evaluate.py results/deep/scores_resnet18_gabor_Db1_a.csv --name "ResNet-18 ImageNet gabor"     --tune results/deep/scores_resnet18_gabor_Db1_b.csv --out results/deep
+python src/compare.py --out results/compare     "SourceAFIS=results/minutiae/scores_sourceafis_Db1_a.csv"     "ResNet-18 ImageNet (Gabor)=results/deep/scores_resnet18_gabor_Db1_a.csv"
+```
+
 Parmak izi görüntüsü içeren şekiller (fig1, fig2, fig5–fig7) FVC lisansı gereği repoda
 bulunmaz; `phase3_figures.py` veriyle birlikte çalıştırıldığında yerelde üretilir.
 
@@ -54,9 +64,12 @@ bulunmaz; `phase3_figures.py` veriyle birlikte çalıştırıldığında yerelde
 | `src/phase3_stats.py` | Görüntü başına kalite ölçüleri |
 | `src/phase3_figures.py` | Faz 3 şekilleri, red kuralları ve özet |
 | `src/minutiae/FvcScores.java` | FVC protokolüyle SourceAFIS genuine/impostor skorları |
+| `src/deep/embed_scores.py` | ResNet-18 gömmesi + kosinüs benzerliği, aynı FVC çiftleri |
+| `src/compare.py` | Sistemlerin ortak DET grafiği ve karşılaştırma tablosu |
 | `src/evaluate.py` | EER, FNMR@FMR, parmak bazlı bootstrap GA, DET eğrisi (her iki dal için) |
 | `tools/get_sourceafis.sh` | SourceAFIS ve bağımlılıklarını SHA-1 doğrulamalı indirir |
 | `results/minutiae/` | Skor CSV'leri, `metrics_sourceafis.json`, DET şekli |
+| `results/deep/`, `results/compare/` | CNN skorları/metrikleri, ortak DET ve tablo |
 | `results/phase3/` | Grafikler, CSV'ler, `summary.json`, slayt notları |
 
 ## Değerlendirme protokolü

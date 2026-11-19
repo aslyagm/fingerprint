@@ -77,12 +77,12 @@ def bootstrap(df, n_boot=1000, seed=0):
 
 
 def det_axes(ax):
-    ticks = [0.0001, 0.001, 0.01, 0.05, 0.2, 0.5]
-    labels = ["0,01", "0,1", "1", "5", "20", "50"]
+    ticks = [0.0001, 0.001, 0.01, 0.05, 0.2, 0.5, 0.8, 0.95]
+    labels = ["0,01", "0,1", "1", "5", "20", "50", "80", "95"]
     ax.set_xticks(norm.ppf(ticks), labels)
     ax.set_yticks(norm.ppf(ticks), labels)
-    ax.set_xlim(norm.ppf(0.0001), norm.ppf(0.5))
-    ax.set_ylim(norm.ppf(0.0001), norm.ppf(0.5))
+    ax.set_xlim(norm.ppf(0.0001), norm.ppf(0.95))
+    ax.set_ylim(norm.ppf(0.0001), norm.ppf(0.95))
     ax.set_xlabel("FMR (%)")
     ax.set_ylabel("FNMR (%)")
     ax.grid(True, alpha=0.3)
@@ -94,11 +94,11 @@ def plot_det(curves, path):
     for name, (gen, imp, m) in curves.items():
         _, fmr, fnmr = rates(gen, imp)
         ax.plot(norm.ppf(np.clip(fmr, eps, 1 - eps)), norm.ppf(np.clip(fnmr, eps, 1 - eps)),
-                label=f"{name} (EER %{100 * m['eer']:.2f})")
+                label=f"{name} (EER %{100 * m['eer']:.2f})".replace(".", ","))
         ax.plot(norm.ppf(m["eer"]), norm.ppf(m["eer"]), "o", ms=4, color=ax.lines[-1].get_color())
-    ax.plot(norm.ppf([1e-4, 0.5]), norm.ppf([1e-4, 0.5]), ":", color="gray", lw=0.8)
+    ax.plot(norm.ppf([1e-4, 0.95]), norm.ppf([1e-4, 0.95]), ":", color="gray", lw=0.8)
     det_axes(ax)
-    ax.legend(loc="upper right")
+    ax.legend(loc="lower left", fontsize=8)
     ax.set_title("DET — FVC2002 DB1-A")
     fig.tight_layout()
     fig.savefig(path, dpi=200)

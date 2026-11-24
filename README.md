@@ -56,6 +56,7 @@ python src/deep/embed_scores.py Db1_a --input gabor --weights runs/arcface/best.
 python src/deep/embed_scores.py Db1_b --input gabor --weights runs/arcface/best.pt --name resnet18_arcface
 python src/evaluate.py results/deep/scores_resnet18_arcface_Db1_a.csv --name "ResNet-18 ArcFace"     --tune results/deep/scores_resnet18_arcface_Db1_b.csv --out results/deep
 python src/compare.py --out results/compare     "SourceAFIS=results/minutiae/scores_sourceafis_Db1_a.csv"     "ResNet-18 ArcFace (ince ayar)=results/deep/scores_resnet18_arcface_Db1_a.csv"     "ResNet-18 ImageNet (Gabor)=results/deep/scores_resnet18_gabor_Db1_a.csv"
+python src/score_hist.py --out results/compare     "SourceAFIS=results/minutiae/scores_sourceafis_Db1_a.csv"     "ResNet-18 ArcFace (ince ayar)=results/deep/scores_resnet18_arcface_Db1_a.csv"     "ResNet-18 ImageNet (Gabor)=results/deep/scores_resnet18_gabor_Db1_a.csv"
 ```
 
 İnce ayar verisi: Springer *Handbook of Fingerprint Recognition* (3. baskı) 4. bölüm ekindeki
@@ -74,6 +75,7 @@ bulunmaz; `phase3_figures.py` veriyle birlikte çalıştırıldığında yerelde
 | `src/minutiae/FvcScores.java` | FVC protokolüyle SourceAFIS genuine/impostor skorları |
 | `src/deep/embed_scores.py` | ResNet-18 gömmesi + kosinüs benzerliği, aynı FVC çiftleri |
 | `src/deep/finetune.py` | DB2–DB4 üzerinde ArcFace ince ayarı (doğrulama: Db2–4_b) |
+| `src/score_hist.py` | Genuine/impostor skor dağılımları, EER ve FMR %1 eşikleri |
 | `src/compare.py` | Sistemlerin ortak DET grafiği ve karşılaştırma tablosu |
 | `src/evaluate.py` | EER, FNMR@FMR, parmak bazlı bootstrap GA, DET eğrisi (her iki dal için) |
 | `tools/get_sourceafis.sh` | SourceAFIS ve bağımlılıklarını SHA-1 doğrulamalı indirir |

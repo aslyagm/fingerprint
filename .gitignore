@@ -43,3 +43,7 @@ results/phase3/fig2_pipeline.png
 results/phase3/fig5_quality_issues.png
 results/phase3/fig6_rejected_examples.png
 results/phase3/fig7_hardest_cases.png
+
+# Ön işleme önbelleği ve eğitim çıktıları
+cache/
+runs/

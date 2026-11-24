@@ -42,8 +42,15 @@ def square_crop(img, mask, fill):
     return cv2.resize(out, (SIZE, SIZE), interpolation=cv2.INTER_AREA)
 
 
-def prepare(path, mode):
+DPI = {"Db2": 569}  # diğer FVC2002 kümeleri 500 dpi
+
+
+def prepare_array(path, mode):
+    """224×224 float32 gri görüntü (0..1). 500 dpi dışındaki kümeler önce 500 dpi'a ölçeklenir."""
     img = load(str(path))
+    dpi = DPI.get(Path(path).parent.name[:3], 500)
+    if dpi != 500:
+        img = cv2.resize(img, None, fx=500 / dpi, fy=500 / dpi, interpolation=cv2.INTER_AREA)
     if mode == "raw":
         mask, _ = segment(img)
         g = square_crop(img, mask, 255).astype(np.float32) / 255.0
@@ -53,8 +60,22 @@ def prepare(path, mode):
         e = (e - e.min()) / (e.max() - e.min() + 1e-6)
         e[~r["mask"]] = 0.5
         g = square_crop(e, r["mask"], 0.5)
-    x = (np.repeat(g[..., None], 3, axis=2) - MEAN) / STD
-    return torch.from_numpy(x.transpose(2, 0, 1).copy())
+    return g.astype(np.float32)
+
+
+def to_tensor(g):
+    """Gri (H,W) veya (B,1,H,W) 0..1 -> ImageNet normalize edilmiş 3 kanallı tensör."""
+    g = torch.as_tensor(g)
+    if g.dim() == 2:
+        g = g[None]
+    g = g.expand(*g.shape[:-3], 3, *g.shape[-2:])
+    m = torch.tensor(MEAN).view(3, 1, 1)
+    s = torch.tensor(STD).view(3, 1, 1)
+    return (g - m) / s
+
+
+def prepare(path, mode):
+    return to_tensor(prepare_array(path, mode))
 
 
 def build_model(weights_path=None):

@@ -6,10 +6,10 @@
     "fnmr@fmr0.001": 0.05142857142857143
   },
   {
-    "system": "ResNet-18 ImageNet (ham)",
-    "eer": 0.3867261904761905,
-    "fnmr@fmr0.01": 0.8517857142857143,
-    "fnmr@fmr0.001": 0.9221428571428572
+    "system": "ResNet-18 ArcFace (ince ayar)",
+    "eer": 0.06644660894660895,
+    "fnmr@fmr0.01": 0.24214285714285713,
+    "fnmr@fmr0.001": 0.4967857142857143
   },
   {
     "system": "ResNet-18 ImageNet (Gabor)",

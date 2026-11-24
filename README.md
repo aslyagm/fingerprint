@@ -50,8 +50,16 @@ Derin dal (ResNet-18; CPU yeterli, PyTorch CPU sürümü için
 python src/deep/embed_scores.py Db1_a --input gabor     # raw | gabor; --weights ile ince ayarlı model
 python src/deep/embed_scores.py Db1_b --input gabor
 python src/evaluate.py results/deep/scores_resnet18_gabor_Db1_a.csv --name "ResNet-18 ImageNet gabor"     --tune results/deep/scores_resnet18_gabor_Db1_b.csv --out results/deep
-python src/compare.py --out results/compare     "SourceAFIS=results/minutiae/scores_sourceafis_Db1_a.csv"     "ResNet-18 ImageNet (Gabor)=results/deep/scores_resnet18_gabor_Db1_a.csv"
+# İnce ayar: FVC2002 DB2–DB4 (DB1 ile ortak kişi yok); CPU'da ~70 dk
+python src/deep/finetune.py --epochs 15 --out runs/arcface
+python src/deep/embed_scores.py Db1_a --input gabor --weights runs/arcface/best.pt --name resnet18_arcface
+python src/deep/embed_scores.py Db1_b --input gabor --weights runs/arcface/best.pt --name resnet18_arcface
+python src/evaluate.py results/deep/scores_resnet18_arcface_Db1_a.csv --name "ResNet-18 ArcFace"     --tune results/deep/scores_resnet18_arcface_Db1_b.csv --out results/deep
+python src/compare.py --out results/compare     "SourceAFIS=results/minutiae/scores_sourceafis_Db1_a.csv"     "ResNet-18 ArcFace (ince ayar)=results/deep/scores_resnet18_arcface_Db1_a.csv"     "ResNet-18 ImageNet (Gabor)=results/deep/scores_resnet18_gabor_Db1_a.csv"
 ```
+
+İnce ayar verisi: Springer *Handbook of Fingerprint Recognition* (3. baskı) 4. bölüm ekindeki
+zip'ten `FVC2002/Dbs/Db2_*`, `Db3_*`, `Db4_*` klasörlerini proje köküne çıkarın.
 
 Parmak izi görüntüsü içeren şekiller (fig1, fig2, fig5–fig7) FVC lisansı gereği repoda
 bulunmaz; `phase3_figures.py` veriyle birlikte çalıştırıldığında yerelde üretilir.
@@ -65,6 +73,7 @@ bulunmaz; `phase3_figures.py` veriyle birlikte çalıştırıldığında yerelde
 | `src/phase3_figures.py` | Faz 3 şekilleri, red kuralları ve özet |
 | `src/minutiae/FvcScores.java` | FVC protokolüyle SourceAFIS genuine/impostor skorları |
 | `src/deep/embed_scores.py` | ResNet-18 gömmesi + kosinüs benzerliği, aynı FVC çiftleri |
+| `src/deep/finetune.py` | DB2–DB4 üzerinde ArcFace ince ayarı (doğrulama: Db2–4_b) |
 | `src/compare.py` | Sistemlerin ortak DET grafiği ve karşılaştırma tablosu |
 | `src/evaluate.py` | EER, FNMR@FMR, parmak bazlı bootstrap GA, DET eğrisi (her iki dal için) |
 | `tools/get_sourceafis.sh` | SourceAFIS ve bağımlılıklarını SHA-1 doğrulamalı indirir |

@@ -29,8 +29,8 @@ python -m venv .venv
 Faz 3 (veri ve ön işleme) sonuçlarını yeniden üretmek için:
 
 ```bash
-python src/phase3_stats.py      # results/phase3/quality.csv
-python src/phase3_figures.py    # şekiller, quality_flagged.csv, summary.json
+python src/phase3_stats.py # results/phase3/quality.csv
+python src/phase3_figures.py # şekiller, quality_flagged.csv, summary.json
 ```
 
 Minutiae dalı (SourceAFIS 3.18.1, Java 17+ gerekir):
@@ -40,23 +40,23 @@ bash tools/get_sourceafis.sh                                   # jar'ları tools
 javac -encoding UTF-8 -cp "tools/lib/*" -d build src/minutiae/FvcScores.java
 java -cp "build;tools/lib/*" FvcScores Db1_a results/minutiae/scores_sourceafis_Db1_a.csv   # Linux/macOS: ':'
 java -cp "build;tools/lib/*" FvcScores Db1_b results/minutiae/scores_sourceafis_Db1_b.csv
-python src/evaluate.py results/minutiae/scores_sourceafis_Db1_a.csv --name SourceAFIS     --tune results/minutiae/scores_sourceafis_Db1_b.csv --out results/minutiae
+python src/evaluate.py results/minutiae/scores_sourceafis_Db1_a.csv --name SourceAFIS --tune results/minutiae/scores_sourceafis_Db1_b.csv --out results/minutiae
 ```
 
 Derin dal (ResNet-18; CPU yeterli, PyTorch CPU sürümü için
 `pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu`):
 
 ```bash
-python src/deep/embed_scores.py Db1_a --input gabor     # raw | gabor; --weights ile ince ayarlı model
+python src/deep/embed_scores.py Db1_a --input gabor # raw | gabor; --weights ile ince ayarlı model
 python src/deep/embed_scores.py Db1_b --input gabor
-python src/evaluate.py results/deep/scores_resnet18_gabor_Db1_a.csv --name "ResNet-18 ImageNet gabor"     --tune results/deep/scores_resnet18_gabor_Db1_b.csv --out results/deep
+python src/evaluate.py results/deep/scores_resnet18_gabor_Db1_a.csv --name "ResNet-18 ImageNet gabor" --tune results/deep/scores_resnet18_gabor_Db1_b.csv --out results/deep
 # İnce ayar: FVC2002 DB2–DB4 (DB1 ile ortak kişi yok); CPU'da ~70 dk
 python src/deep/finetune.py --epochs 15 --out runs/arcface
 python src/deep/embed_scores.py Db1_a --input gabor --weights runs/arcface/best.pt --name resnet18_arcface
 python src/deep/embed_scores.py Db1_b --input gabor --weights runs/arcface/best.pt --name resnet18_arcface
-python src/evaluate.py results/deep/scores_resnet18_arcface_Db1_a.csv --name "ResNet-18 ArcFace"     --tune results/deep/scores_resnet18_arcface_Db1_b.csv --out results/deep
-python src/compare.py --out results/compare     "SourceAFIS=results/minutiae/scores_sourceafis_Db1_a.csv"     "ResNet-18 ArcFace (ince ayar)=results/deep/scores_resnet18_arcface_Db1_a.csv"     "ResNet-18 ImageNet (Gabor)=results/deep/scores_resnet18_gabor_Db1_a.csv"
-python src/score_hist.py --out results/compare     "SourceAFIS=results/minutiae/scores_sourceafis_Db1_a.csv"     "ResNet-18 ArcFace (ince ayar)=results/deep/scores_resnet18_arcface_Db1_a.csv"     "ResNet-18 ImageNet (Gabor)=results/deep/scores_resnet18_gabor_Db1_a.csv"
+python src/evaluate.py results/deep/scores_resnet18_arcface_Db1_a.csv --name "ResNet-18 ArcFace" --tune results/deep/scores_resnet18_arcface_Db1_b.csv --out results/deep
+python src/compare.py --out results/compare "SourceAFIS=results/minutiae/scores_sourceafis_Db1_a.csv" "ResNet-18 ArcFace (ince ayar)=results/deep/scores_resnet18_arcface_Db1_a.csv" "ResNet-18 ImageNet (Gabor)=results/deep/scores_resnet18_gabor_Db1_a.csv"
+python src/score_hist.py --out results/compare "SourceAFIS=results/minutiae/scores_sourceafis_Db1_a.csv" "ResNet-18 ArcFace (ince ayar)=results/deep/scores_resnet18_arcface_Db1_a.csv" "ResNet-18 ImageNet (Gabor)=results/deep/scores_resnet18_gabor_Db1_a.csv"
 ```
 
 İnce ayar verisi: Springer *Handbook of Fingerprint Recognition* (3. baskı) 4. bölüm ekindeki

@@ -47,3 +47,6 @@ results/phase3/fig7_hardest_cases.png
 # Ön işleme önbelleği ve eğitim çıktıları
 cache/
 runs/
+
+# Sunum konuşma metni
+sunum_metni.md

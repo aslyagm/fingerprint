@@ -23,11 +23,48 @@
     ]
   },
   "n_boot": 1000,
-  "tuned_on_db1b": {
-    "threshold": 0.935753,
-    "n_genuine": 280,
-    "n_impostor": 45,
-    "test_fmr": 0.438989898989899,
-    "test_fnmr": 0.32107142857142856
+  "thresholds": {
+    "DB1-B": {
+      "n_genuine": 280,
+      "n_impostor": 2880,
+      "points": {
+        "EER": {
+          "threshold": 0.93398,
+          "test_fmr": 0.46646464646464647,
+          "test_fnmr": 0.3057142857142857
+        },
+        "FMR %1": {
+          "threshold": 0.969714,
+          "test_fmr": 0.015353535353535354,
+          "test_fnmr": 0.7767857142857143
+        },
+        "FMR %0,1": {
+          "threshold": 0.97602,
+          "test_fmr": 0.0028282828282828283,
+          "test_fnmr": 0.8675
+        }
+      }
+    },
+    "DB1-4 B": {
+      "n_genuine": 1120,
+      "n_impostor": 11520,
+      "points": {
+        "EER": {
+          "threshold": 0.941597,
+          "test_fmr": 0.3377777777777778,
+          "test_fnmr": 0.3846428571428571
+        },
+        "FMR %1": {
+          "threshold": 0.971826,
+          "test_fmr": 0.008686868686868687,
+          "test_fnmr": 0.8085714285714286
+        },
+        "FMR %0,1": {
+          "threshold": 0.979282,
+          "test_fmr": 0.00040404040404040404,
+          "test_fnmr": 0.9082142857142858
+        }
+      }
+    }
   }
 }

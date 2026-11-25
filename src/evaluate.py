@@ -5,7 +5,7 @@ Metrikler: EER, FNMR@FMR=%1 ve %0,1; parmaklar üzerinden bootstrap %95 güven a
 
 Kullanım:
     python src/evaluate.py results/minutiae/scores_sourceafis_Db1_a.csv --name SourceAFIS \
-        --tune results/minutiae/scores_sourceafis_Db1_b.csv --out results/minutiae
+        --tune "DB1-B=results/tune/scores_sourceafis_Db1_b.csv" --out results/minutiae
 """
 import argparse
 import json
@@ -109,7 +109,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("scores")
     ap.add_argument("--name", default="sistem")
-    ap.add_argument("--tune", help="eşik seçimi için ayrık skor dosyası (DB1-B)")
+    ap.add_argument("--tune", action="append",
+                    help="eşik seçimi için ayrık skorlar: ETİKET=a.csv,b.csv (tekrarlanabilir)")
     ap.add_argument("--out", default="results")
     ap.add_argument("--n-boot", type=int, default=1000)
     a = ap.parse_args()
@@ -126,15 +127,18 @@ def main():
     summary = {"name": a.name, "n_genuine": len(gen), "n_impostor": len(imp), **m,
                "ci95": ci, "n_boot": a.n_boot}
 
-    if a.tune:
-        t = load(a.tune)
+    summary["thresholds"] = {}
+    for spec in a.tune or []:
+        label, paths = spec.split("=", 1) if "=" in spec else ("tune", spec)
+        t = pd.concat([load(p) for p in paths.split(",")])
         tg, ti = t[t.label == 1].score.to_numpy(), t[t.label == 0].score.to_numpy()
-        thr = metrics(tg, ti)["eer_threshold"]
-        summary["tuned_on_db1b"] = {
-            "threshold": thr,
+        tm = metrics(tg, ti)
+        points = {"EER": tm["eer_threshold"], "FMR %1": tm["thr@fmr0.01"], "FMR %0,1": tm["thr@fmr0.001"]}
+        summary["thresholds"][label] = {
             "n_genuine": len(tg), "n_impostor": len(ti),
-            "test_fmr": float(np.mean(imp >= thr)),
-            "test_fnmr": float(np.mean(gen < thr)),
+            "points": {k: {"threshold": float(v),
+                           "test_fmr": float(np.mean(imp >= v)),
+                           "test_fnmr": float(np.mean(gen < v))} for k, v in points.items()},
         }
 
     tag = a.name.lower().replace(" ", "_")
@@ -145,10 +149,11 @@ def main():
     for t in FMR_TARGETS:
         k = f"fnmr@fmr{t:g}"
         print(f"  FNMR @ FMR %{100*t:g}: %{100*m[k]:.2f} [{100*ci[k][0]:.2f}, {100*ci[k][1]:.2f}]")
-    if a.tune:
-        s = summary["tuned_on_db1b"]
-        print(f"  DB1-B EER eşiği {s['threshold']:.2f} -> testte FMR %{100*s['test_fmr']:.2f}, "
-              f"FNMR %{100*s['test_fnmr']:.2f}")
+    for label, s in summary["thresholds"].items():
+        print(f"  Eşik seçimi: {label} ({s['n_genuine']} genuine, {s['n_impostor']} impostor)")
+        for k, p in s["points"].items():
+            print(f"    {k:9s} eşiği {p['threshold']:.3f} -> testte FMR %{100*p['test_fmr']:.2f}, "
+                  f"FNMR %{100*p['test_fnmr']:.2f}")
 
 
 if __name__ == "__main__":

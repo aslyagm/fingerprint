@@ -1,0 +1,81 @@
+{
+  "çalışma noktası": "FMR %1 eşiği, DB1-4 B üzerinde seçildi",
+  "eşikler": {
+    "SourceAFIS": 16.740825,
+    "CNN": 0.707783
+  },
+  "genuine (yanlış red)": {
+    "toplam çift": 2800,
+    "örtüşme": {
+      "yalnız SourceAFIS": 21,
+      "yalnız CNN": 521,
+      "ikisi de": 67,
+      "hiçbiri": 2191
+    },
+    "SourceAFIS": {
+      "hata sayısı": 88,
+      "işaretli görüntü içeren oran": 0.42
+    },
+    "CNN": {
+      "hata sayısı": 588,
+      "işaretli görüntü içeren oran": 0.201
+    },
+    "tüm genuine çiftlerde işaretli oran": 0.096
+  },
+  "impostor (yanlış kabul)": {
+    "toplam çift": 4950,
+    "örtüşme": {
+      "yalnız SourceAFIS": 52,
+      "yalnız CNN": 60,
+      "ikisi de": 5,
+      "hiçbiri": 4833
+    },
+    "SourceAFIS": {
+      "hata sayısı": 57,
+      "işaretli görüntü içeren oran": 0.0
+    },
+    "CNN": {
+      "hata sayısı": 65,
+      "işaretli görüntü içeren oran": 0.015
+    }
+  },
+  "izlenim bazında yanlış red oranı": {
+    "1": {
+      "SourceAFIS": 0.0229,
+      "CNN": 0.1671
+    },
+    "2": {
+      "SourceAFIS": 0.0186,
+      "CNN": 0.1386
+    },
+    "3": {
+      "SourceAFIS": 0.02,
+      "CNN": 0.1557
+    },
+    "4": {
+      "SourceAFIS": 0.04,
+      "CNN": 0.2657
+    },
+    "5": {
+      "SourceAFIS": 0.0557,
+      "CNN": 0.33
+    },
+    "6": {
+      "SourceAFIS": 0.0257,
+      "CNN": 0.2171
+    },
+    "7": {
+      "SourceAFIS": 0.0343,
+      "CNN": 0.22
+    },
+    "8": {
+      "SourceAFIS": 0.0343,
+      "CNN": 0.1857
+    }
+  },
+  "skor korelasyonu (Spearman)": {
+    "genuine": 0.54,
+    "impostor": 0.129
+  },
+  "SourceAFIS skoru < 1 olan genuine çift": 21
+}

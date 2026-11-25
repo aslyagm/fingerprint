@@ -23,12 +23,16 @@ import java.util.TreeSet;
  */
 public class FvcScores {
     public static void main(String[] args) throws Exception {
-        if (args.length != 2) {
-            System.err.println("Kullanım: java FvcScores <klasör> <çıktı.csv>");
+        if (args.length < 2 || args.length > 4) {
+            System.err.println("Kullanım: java FvcScores <klasör> <çıktı.csv> [fvc|all] [dpi]");
             System.exit(2);
         }
         Path dir = Path.of(args[0]);
         Path out = Path.of(args[1]);
+        // fvc: impostor = parmakların 1. izlenimleri (FVC protokolü)
+        // all: impostor = farklı parmaklardan tüm izlenim çiftleri (eşik seçimi için daha çok impostor)
+        boolean allImpostors = args.length > 2 && args[2].equals("all");
+        double dpi = args.length > 3 ? Double.parseDouble(args[3]) : 500;
 
         // parmak -> izlenim numaraları (dosya adı: <parmak>_<izlenim>.tif)
         TreeMap<Integer, TreeSet<Integer>> fingers = new TreeMap<>();
@@ -42,8 +46,8 @@ public class FvcScores {
             }
         }
 
-        // Şablon çıkarımı (FVC2002 DB1: 500 dpi)
-        var opts = new FingerprintImageOptions().dpi(500);
+        // Şablon çıkarımı (FVC2002 DB1/DB3/DB4: 500 dpi, DB2: 569 dpi)
+        var opts = new FingerprintImageOptions().dpi(dpi);
         TreeMap<String, FingerprintTemplate> templates = new TreeMap<>();
         long t0 = System.nanoTime();
         for (var e : fingers.entrySet())
@@ -64,9 +68,13 @@ public class FvcScores {
         }
         List<Integer> ids = new ArrayList<>(fingers.keySet());
         for (int i = 0; i < ids.size(); i++)
-            for (int j = i + 1; j < ids.size(); j++)
-                pairs.add(new String[]{ids.get(i) + "_" + fingers.get(ids.get(i)).first(),
-                                       ids.get(j) + "_" + fingers.get(ids.get(j)).first(), "0"});
+            for (int j = i + 1; j < ids.size(); j++) {
+                var a = allImpostors ? fingers.get(ids.get(i)) : List.of(fingers.get(ids.get(i)).first());
+                var b = allImpostors ? fingers.get(ids.get(j)) : List.of(fingers.get(ids.get(j)).first());
+                for (int x : a)
+                    for (int y : b)
+                        pairs.add(new String[]{ids.get(i) + "_" + x, ids.get(j) + "_" + y, "0"});
+            }
 
         long t1 = System.nanoTime();
         int gen = 0, imp = 0;

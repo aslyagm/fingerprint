@@ -64,15 +64,30 @@ def main():
     print(f"\n(Eşikler: {POINT}, test verisinden ayrık {TUNE} kümesinde seçildi)")
 
     if a.show:
+        # Pencere kütüphanesi (Tk) gerektirmez: PNG'ye kaydedip sistemin görüntüleyicisiyle açar.
+        import os
+        import tempfile
+
         import cv2
+        import matplotlib
+        matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        fig, ax = plt.subplots(1, 2, figsize=(7, 4))
+        fig, ax = plt.subplots(1, 2, figsize=(8, 4.6))
         for x, p in zip(ax, (a.a, a.b)):
             x.imshow(cv2.imread(p, cv2.IMREAD_GRAYSCALE), cmap="gray")
             x.set_title(Path(p).name)
             x.axis("off")
-        fig.suptitle(" | ".join(f"{n}: {s:.2f} ({'KABUL' if s >= t else 'RED'})" for n, s, t in rows), fontsize=9)
-        plt.show()
+        fig.suptitle("\n".join(f"{n}: {s:.2f}  (eşik {t:.2f})  ->  {'KABUL' if s >= t else 'RED'}"
+                               for n, s, t in rows), fontsize=11)
+        fig.tight_layout()
+        out = Path(tempfile.gettempdir()) / f"demo_{Path(a.a).stem}_{Path(a.b).stem}.png"
+        fig.savefig(out, dpi=150)
+        plt.close(fig)
+        print(f"\nGörüntü: {out}")
+        if sys.platform == "win32":
+            os.startfile(out)
+        else:
+            subprocess.run(["open" if sys.platform == "darwin" else "xdg-open", str(out)], check=False)
 
 
 if __name__ == "__main__":
